@@ -1,0 +1,25 @@
+A CPU with 8 cores can execute 8 threads in true parallel.
+However, modern CPUs use context switching to time-slice many more threads,
+so a server might be able to handle hundreds of active threads, depending on workload and system limits.
+
+Traditional applications use a thread-per-request model,
+where a thread pool serves incoming requests.
+If the pool has 500 threads and a queue of 100,
+the server can actively handle 500 running + 100 queued = 600 in-flight requests.
+Beyond that, new requests may be rejected or delayed.
+
+To improve concurrency, modern applications use non-blocking asynchronous I/O.
+With this approach, threads don't sit idle during I/O operations.
+Instead, they initiate I/O and return to the pool, increasing CPU efficiency and throughput.
+This allows a server to handle thousands of concurrent requests using far fewer threads.
+
+But even with async I/O, a single server has limits — like CPU, memory, and backend capacity.
+When these are reached, we scale the system vertically (stronger hardware) or horizontally (more servers) to handle higher load.
+
+Everything above that we have mentioned are all kernel level threads.
+Each Java Thread maps to one kernel-level thread (on modern JVMs)
+Traditional Java threads (Java 1.0 - Java 20):
+     Thread t = new Thread() → Kernel-level thread ✅
+Java Virtual Threads (Java 21+):
+     Thread t = Thread.ofVirtual().start(...) → User-level thread (mapped to a small pool of kernel threads)
+
