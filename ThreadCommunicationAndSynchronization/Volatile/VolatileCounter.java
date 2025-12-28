@@ -1,4 +1,4 @@
-package MultiThreading.ThreadCommunicationAndSynchronization.Volatile;
+package Volatile;
 
 class SharedResourceCounter {
     private volatile int count = 0;

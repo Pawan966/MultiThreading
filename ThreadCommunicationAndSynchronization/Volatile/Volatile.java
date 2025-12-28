@@ -1,4 +1,4 @@
-package MultiThreading.ThreadCommunicationAndSynchronization.Volatile;
+package Volatile;
 
 /*
 * Create a flag like volatile boolean running = true;
