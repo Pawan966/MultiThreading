@@ -1,4 +1,4 @@
-package MultiThreading.ThreadCommunicationAndSynchronization;
+package SyncConcept;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /*

@@ -1,4 +1,4 @@
-package MultiThreading.ProducerConsumer;
+package ProConProblems;
 
 class SharedResource {
     private int count = 0;

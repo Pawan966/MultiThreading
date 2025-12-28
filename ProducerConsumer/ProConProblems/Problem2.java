@@ -1,4 +1,4 @@
-package MultiThreading.ProducerConsumer;
+package ProConProblems;
 
 class SharedResourceBuffer {
     private int idx = 0;

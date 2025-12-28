@@ -1,4 +1,4 @@
-package MultiThreading.ThreadCreation;
+package CreationConcept;
 
 // this method is more preferable because:
 // 1. It is possible to extend another class

@@ -1,4 +1,4 @@
-package Problems;
+package CreationProblems;
 
 // creating two threads and printing odd and even numbers
 public class Problem1 {

@@ -1,4 +1,4 @@
-package MultiThreading.ThreadCommunicationAndSynchronization;
+package SyncConcept;
 
 // race condition: When multiple threads access shared data and the final outcome depends on the order in which the threads execute.
 

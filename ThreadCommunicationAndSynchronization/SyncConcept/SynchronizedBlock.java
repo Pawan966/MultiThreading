@@ -1,4 +1,4 @@
-package MultiThreading.ThreadCommunicationAndSynchronization;
+package SyncConcept;
 
 class SharedResourceCounter {
     private int count = 0;

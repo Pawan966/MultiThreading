@@ -1,4 +1,4 @@
-package MultiThreading.ThreadCreation;
+package CreationConcept;
 
 class MyThread extends Thread {
     public void run() {

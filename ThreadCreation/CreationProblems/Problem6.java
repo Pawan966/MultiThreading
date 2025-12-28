@@ -1,4 +1,4 @@
-package Problems;
+package CreationProblems;
 
 // program to demonstrate the use of join on thread other than main
 class Task implements  Runnable {
