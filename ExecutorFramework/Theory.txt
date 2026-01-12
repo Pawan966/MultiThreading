@@ -1,0 +1,124 @@
+1. Executor Framework:
+You submit tasks, Java manages threads.
+
+An ExecutorService:
+  - Manages a pool of threads
+  - Executes submitted tasks
+  - Reuses threads efficiently, because when a thread is terminated then it cannot be re-used.
+  - Handles lifecycle (shutdown, termination)
+
+a. shutdown() performs a graceful shutdown, stops accepting new tasks, letting already submitted tasks finish.
+   Completes queued tasks.
+   Best use for payment processing, order processing, etc.
+
+b. shutdownNow() attempts to stop tasks immediately by interrupting worker threads.
+   Does not completes queued tasks.
+   If task ignores interruption → it may keep running
+   Returns list of queued but unexecuted tasks
+   Best use for emergency stop, system shutdown.
+
+Best Practice Shutdown Pattern
+executor.shutdown(); // Stop accepting new tasks
+try {
+    if (!executor.awaitTermination(30, TimeUnit.SECONDS)) { // Wait for 30 seconds
+        executor.shutdownNow(); // Interrupt all threads
+    }
+} catch (InterruptedException e) {
+    executor.shutdownNow();
+    Thread.currentThread().interrupt();
+}
+
+
+2. ThreadPoolExecutor Anatomy
+   ThreadPoolExecutor(
+       int corePoolSize,
+       int maximumPoolSize,
+       long keepAliveTime,
+       TimeUnit unit,
+       BlockingQueue<Runnable> workQueue,
+       ThreadFactory threadFactory,
+       RejectedExecutionHandler handler
+    )
+
+    corePoolSize:
+      - Minimum number of worker threads always kept alive. Even if idle, they stay alive
+      - These threads do not die (by default)
+      - executor.allowCoreThreadTimeOut(true) -> Now core threads can die after keepAliveTime
+
+    maximumPoolSize:
+      - Absolute maximum number of threads
+      - Only used when queue is full
+      - If queue is unbounded then maximumPoolSize is ignored
+
+    keepAliveTime
+      - keepAliveTime is the maximum time that idle threads are allowed to stay alive before being terminated.
+      - Threads above corePoolSize are affected by this, not the core threads. But if allowCoreThreadTimeOut is set to true, then core threads are also affected.
+      - Why keepAliveTime Exists
+         - Without it:
+            - Threads created during spikes stay forever
+            - Memory + CPU overhead increases
+
+         - With it:
+            - Pool shrinks automatically
+            - System adapts to traffic
+
+    workQueue:
+      - Stores tasks waiting for execution
+      - Acts as shock absorber
+      - Queue Types:
+          - ArrayBlockingQueue
+              - Fixed-size queue
+              - Tasks are processed in FIFO order
+              - Capacity defined upfront -> new ArrayBlockingQueue<>(100);
+              - Real-world use case -> Order placement, Payment processing, APIs under load
+
+          - LinkedBlockingQueue
+              - Linked list based
+              - Can be bounded, but usually used unbounded -> new LinkedBlockingQueue<>();
+              - Real-world use case -> Background jobs, Known low traffic
+
+          - SynchronousQueue
+              - Zero capacity
+              - Task handed directly to a thread
+              - No storage -> new SynchronousQueue<>();
+              - Real-world use case -> Short-lived async tasks, Low-latency services
+
+          - PriorityBlockingQueue
+              - Unbounded queue
+              - Orders tasks by priority
+              - Requires Comparable or Comparator
+              - Real-world use case -> Alerting systems, Critical jobs
+
+    threadFactory — How Threads Are Created
+      - ThreadFactory gives you full control over how threads are created inside a thread pool.
+      - Default characteristics:
+          - Auto-generated Thread names
+          - thread.isDaemon() == false
+          - UncaughtExceptionHandler: Exceptions can silently kill worker threads
+
+    RejectedExecutionHandler Policies
+      - A task is rejected when ALL are true:
+          - Threads == maximumPoolSize
+          - Queue is full
+          - Executor is NOT shutdown
+        Only then → rejection policy executes
+      - Types of policies:
+          - AbortPolicy — Fail Fast
+              - Task is NOT executed
+              - Exception thrown immediately
+              - Caller must handle it
+              - Real world use case: Financial transactions, Data consistency systems
+          - CallerRunsPolicy
+              - Task executed by calling thread, client/producer slows down naturally
+              - Executor does NOT create new thread
+              - No rejection
+              - Real-world use case -> REST APIs, Rate limiting systems
+          - DiscardPolicy
+              - Task is silently dropped, only acceptable when tasks are optional.
+              - No exception
+              - No logging
+              - Real-world use case -> Logging, metric collection
+          - DiscardOldestPolicy — Keep Latest Tasks
+              - Drops oldest queued task
+              - Inserts new task
+              - Real-world use case -> Stock data, Live dashboards
