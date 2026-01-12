@@ -39,4 +39,7 @@ public class BasicUsage {
          } catch (InterruptedException | ExecutionException e) {
              // handle exception
          }
+
+    Each worker thread in the pool continuously polls the queue
+    The queue's take() or poll() method is thread-safe, that's how executor service ensures two threads does not execute same task.
 * */
