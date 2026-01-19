@@ -3,40 +3,31 @@ package Concept.Problems;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-class Order {
-    private int orderId;
-    public Order(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getOrderId() {
-        return orderId;
-    }
-}
-
-class OrderProcessor implements Runnable {
-    private Order order;
-    public OrderProcessor(Order order) {
-        this.order = order;
+/*
+Print numbers from 1 to 10 in order using an ExecutorService.
+Constraints:
+  - Each number printed by a task
+  - Ensure executor shuts down properly
+* */
+class NumberPrinter implements Runnable {
+    private int number;
+    public NumberPrinter(int number) {
+        this.number = number;
     }
 
     public void run() {
-        System.out.println("Processing order: " + order.getOrderId());
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            // log the exception
-        }
+        System.out.println("Thread " + Thread.currentThread().getName() + " is printing number: " + number);
     }
 }
 
-// Process 100 orders using a pool of 10 threads with graceful shutdown
 public class Problem1 {
-    public static  void main(String[] args) {
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-        for (int i = 0; i < 100; i++) {
-            executor.execute(new OrderProcessor(new Order(i)));
+    public static void main(String[] args) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        for (int i = 1; i <= 10; i++) {
+            executor.execute(new NumberPrinter(i));
         }
         executor.shutdown();
     }
 }
+
+// Since there is only one thread that's why the numbers are printed in order.

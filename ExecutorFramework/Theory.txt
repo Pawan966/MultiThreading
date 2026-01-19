@@ -40,6 +40,11 @@ try {
        RejectedExecutionHandler handler
     )
 
+    Default behavior:
+       - Uses LinkedBlockingQueue as default queue which is unbounded, so no tasks rejection. This queue is FIFO in nature.
+       - keepAliveTime is 0 seconds by default.
+       - RejectedExecutionHandler is AbortPolicy which throws RejectedExecutionException if task cannot be executed.
+
     corePoolSize:
       - Minimum number of worker threads always kept alive. Even if idle, they stay alive
       - These threads do not die (by default)
