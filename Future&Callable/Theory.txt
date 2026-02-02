@@ -1,0 +1,17 @@
+Why Do We Need Futures and Callable?
+
+The Problem:
+Java threads (Runnable) have two big limitations:
+ - They cannot return a value.
+ - They cannot throw checked exceptions.
+
+new Thread(() -> {
+// do some computation
+int result = 42; // how do we get this back?
+}).start();
+
+In real systems (API calls, DB queries, file processing):
+ - You need results
+ - You need to handle failures
+This is where Callable and Future come in.
+
