@@ -29,11 +29,16 @@ public class CallableExample {
     public static void main(String[] args) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<String> future = executor.submit(new Task());
-
+        if(future.isDone()) {
+            System.out.println("Task is done - pre");
+        }
         try {
-            System.out.println(future.get()); // blocking call because Future represents a result that may not exist yet, and get() is defined as a waiting operation.
+            System.out.println(future.get()); // blocks the thread which executed this line because Future represents a result that may not exist yet, and get() is defined as a waiting operation.
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+        }
+        if(future.isDone()) {
+            System.out.println("Task is done - post");
         }
         executor.shutdown();
     }

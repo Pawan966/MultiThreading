@@ -1,0 +1,12 @@
+# What was wrong with Future?
+  Problems:
+  ❌ Blocking (get())
+  ❌ No chaining
+  ❌ No callbacks
+  ❌ Hard to combine multiple async tasks
+
+In modern backend systems:
+ - You want non-blocking pipelines
+ - You want parallel calls + composition
+ - You want error handling without blocking threads
+👉 CompletableFuture solves this.
