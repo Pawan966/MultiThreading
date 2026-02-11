@@ -59,3 +59,14 @@ public class SemaphoreDemo {
         }
     }
 }
+
+/*
+* Semaphore s = new Semaphore(2);  // Initial: 2 permits
+s.acquire();  // 2 → 1 (decrements)
+s.acquire();  // 1 → 0 (decrements)
+s.acquire();  // 0 → BLOCKS (no permits)
+
+s.release();  // 0 → 1 (increments) ✅
+s.release();  // 1 → 2 (increments) ✅
+s.release();  // 2 → 3 (increments) ✅ Can go above initial value!
+* */
